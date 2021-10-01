@@ -22,6 +22,7 @@ function showId(obj: IHaveAnIdentifier): void {
 }
 
 showId(myObject);
+showId(myObjectToo);
 showId({ id: 3.14 }); // <IHaveAnIdentifier>
 //showId({id:42, foo: 'x'});
 
@@ -41,18 +42,18 @@ function showDesc(obj: IHaveIdAndMaybeDescription): void {
 
 var myObjectWithDescription: IHaveIdAndMaybeDescription = {
   id: 1974,
-  desc: "Rock it!"
+  desc: "Rock it!",
 };
 
 showDesc(myObject);
 showDesc(myObjectWithDescription);
 
 // I am a function: f(a, b)
-interface SomeFooSignature {
+interface PowerFunction {
   (a: number, b: number): number;
 }
 
-var powerOf: SomeFooSignature = function (a, b) {
+var powerOf: PowerFunction = function (a, b) {
   return a ** b;
 };
 

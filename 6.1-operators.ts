@@ -2,20 +2,10 @@
 type Car = { id: number; year: number, make: string };
 type CarKeys = keyof Car;
 
-
 //------------------------------
 // typeOf operator
-let s = "hello";
+let s: any;
 let n: typeof s;
-
-
-type SomeFunction = (x: string) => boolean;
-type Result = ReturnType<SomeFunction>;
-
-function f() {
-  return { x: 10, y: '3' };
-}
-type Type6 = ReturnType<typeof f>;
 
 //------------------------------
 //Indexed Access Types
@@ -50,7 +40,7 @@ interface Name {
   name: string
 }
 
-type IdOrName<T extends Id | Name> = T extends Id ? number : string
+type IdOrName<T extends Id | Name> = T extends Id ? number : boolean
 
 let a: IdOrName<{id: 1}>
 
@@ -88,25 +78,39 @@ type Concrete<Type> = {
 };
 
 type MaybeUser = {
-  id: string;
-  name?: string;
-  age?: number;
+  readonly id: string;
+  readonly name?: string;
+  readonly age?: number;
 };
 
 type ActualUser = Concrete<MaybeUser>
 
-// Remove the 'kind' property
+//-------------------------------------------------
+// Remove the 'id and unit' property
 type RemoveIdField<Type> = {
-  [Property in keyof Type as Exclude<Property, "id">]: Type[Property]
+  [Property in keyof Type as Exclude<Property, 'id' | 'unit'>]: Type[Property]
 };
 
 interface Circle {
   id: number;
   radius: number;
+  unit: string;
+  color: string;
+  border: string;
+  padding: string;
 }
 
 type IdlessCircle = RemoveIdField<Circle>;
 
+//-------------------------------------------------
+type ExtractIdField<Type> = {
+  [Property in keyof Type as Extract<Property, 'id' | 'unit'>]: Type[Property]
+};
+
+type ExtractedCircle = ExtractIdField<Circle>;
+type Ext = ExtractIdField<RemoveIdField<Circle>>
+//-------------------------------------------------
+// Create a new Type that has the same properties
 
 type ExtractPII<Type> = {
   [Property in keyof Type]: Type[Property] extends { pii: true } ? true : false;
@@ -117,75 +121,7 @@ type DBFields = {
   name: { type: string; pii: true };
 };
 
-type ObjectsNeedingGDPRDeletion = ExtractPII<DBFields>;
+type MappedDBFields = ExtractPII<DBFields>;
 
 // ----------------------- partial
-interface StudentInterface {
-  id: number;
-  name: string;
-  age: number;
-}
 
-let student: Partial<StudentInterface> = { id: 1 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-type User = RemoveIdField<CreateMutable<Concrete<MaybeUser>>>;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*HW
-1. Create an interface Id that has property id of number
-2. Create an interface Name that has property name of string
-3. Create a new type IdOrName and pass in a generic type
-* If passed in type extends Id, IdOrName - will be of type number
-* Else if passed in type extends Name, IdOrName - will be of type string
- */
-
-/*interface Id {
-  id: number
-}

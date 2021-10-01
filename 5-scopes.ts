@@ -20,9 +20,3 @@ var app = () => {
   withLet();
 }
 setTimeout(app, 0);
-
-const maxRows = 1000;
-//maxRows = 12;
-if (100 < maxRows) {
-  console.log(`It is within range!`);
-}

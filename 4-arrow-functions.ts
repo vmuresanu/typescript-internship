@@ -16,7 +16,7 @@ var app = () => {
       console.log(`function_x: ${this.x}`);
       // nested function
       setTimeout(function () {
-        console.log(`functions: ${this.x}`);
+        console.log(`setTimeOut function: ${this.x}`);
       }, 0);
     }
 
@@ -30,7 +30,7 @@ var app = () => {
       this.x += 1;
       console.log(`arrow_x: ${this.x}`);
       // nested lambda expression
-      setTimeout(() => console.log(`arrows: ${this.x}`), 0);
+      setTimeout(() => console.log(`setTimeOut arrow function: ${this.x}`), 0);
     }
 
   };

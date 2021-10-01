@@ -53,11 +53,12 @@ module MyModule {
 var exportedClass = new MyModule.MyClass();
 console.log(`calling exportedClass.echo: ${exportedClass.print("Outside!")}`);
 
-//var notExportedClass = new MyModule.InternalClass();
+// var notExportedClass = new MyModule.InternalClass();
 
 // Access modifiers ES vs TS Private fields and
 
 class A {
+ // protected x = 30;
   //private x = 30;
   #x = 30;
 }

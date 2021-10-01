@@ -1,5 +1,5 @@
 // This should be compiled with ES6 as well for contrast
-var _x;
+var _A_x;
 // now I implement the rules given by the interface
 class MyClass {
     constructor(someParam) {
@@ -38,15 +38,16 @@ var MyModule;
 })(MyModule || (MyModule = {}));
 var exportedClass = new MyModule.MyClass();
 console.log(`calling exportedClass.echo: ${exportedClass.print("Outside!")}`);
-//var notExportedClass = new MyModule.InternalClass();
+// var notExportedClass = new MyModule.InternalClass();
 // Access modifiers ES vs TS Private fields and
 class A {
     constructor() {
+        // protected x = 30;
         //private x = 30;
-        _x.set(this, 30);
+        _A_x.set(this, 30);
     }
 }
-_x = new WeakMap();
+_A_x = new WeakMap();
 /*class B extends A {
   x = 20;
 }*/
