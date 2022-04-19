@@ -19,7 +19,40 @@ interface Entity {
     name: boolean;
     age: boolean;
   }
- */
+*/
+
+
+interface Entity {
+  readonly id?: string;
+  readonly name?: string;
+  readonly age?: number;
+  readonly ethnicity?: string;
+}
+
+type ModifiersWrite<Type> = {
+  -readonly [Property in keyof Type]: Type[Property];
+};
+
+type ModifiersOptional<Type> = {
+  [Property in keyof Type]-?: Type[Property];
+};
+
+type ModifiersAge<Type> = {
+  [Property in keyof Type as Exclude<Property, 'age'>]: Type[Property];
+};
+
+type ModifiersEthnicity<Type> = {
+  [Property in keyof Type as Exclude<Property, 'ethnicity'>]: Type[Property];
+};
+
+type ModifiersBoolean<Type> = {
+  [Property in keyof Type as Exclude<Property, 'ethnicity'>]: boolean;
+};
+
+type ModifiedEntity = ModifiersWrite<ModifiersOptional<ModifiersAge<ModifiersEthnicity<Entity>>>>
+
+type EntityBoolean = ModifiersBoolean<ModifiedEntity>
+
 
 // EX 2 ------------------------------------------------
 /*
