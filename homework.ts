@@ -21,14 +21,6 @@ interface Entity {
   }
 */
 
-
-interface Entity {
-  readonly id?: string;
-  readonly name?: string;
-  readonly age?: number;
-  readonly ethnicity?: string;
-}
-
 type ModifiersWrite<Type> = {
   -readonly [Property in keyof Type]: Type[Property];
 };
@@ -38,7 +30,7 @@ type ModifiersOptional<Type> = {
 };
 
 type ModifiersAge<Type> = {
-  [Property in keyof Type as Exclude<Property, 'age'>]: Type[Property];
+  [Property in keyof Type as Exclude<Property, 'id'>]: Type[Property];
 };
 
 type ModifiersEthnicity<Type> = {
@@ -46,7 +38,7 @@ type ModifiersEthnicity<Type> = {
 };
 
 type ModifiersBoolean<Type> = {
-  [Property in keyof Type as Exclude<Property, 'ethnicity'>]: boolean;
+  [Property in keyof Type]: boolean;
 };
 
 type ModifiedEntity = ModifiersWrite<ModifiersOptional<ModifiersAge<ModifiersEthnicity<Entity>>>>
@@ -64,6 +56,20 @@ type EntityBoolean = ModifiersBoolean<ModifiedEntity>
 * Else If passed in type extends Name, IdOrName - will be of type string
 * Else passed in type extends Anything Else, IdOrName - will be of type {age: boolean}
  */
+
+interface Id {
+  id: number
+}
+
+interface Name {
+  name: string
+}
+
+type IdOrName <T extends number | string> = T extends number
+  ? Id
+  : T extends string
+  ? Name
+  : { age: boolean }
 
 // EX 3 ------------------------------------------------
 /*
@@ -83,6 +89,7 @@ interface Car {
   color: string;
   numberOfDoors: number;
 }
+
 Replicate an API response that will have the following structure:
 {
   data: {
@@ -92,6 +99,36 @@ Replicate an API response that will have the following structure:
   errors: string[]
 }
 */
+
+interface User {
+  id: number;
+  name: string;
+  age: number;
+}
+
+interface Car {
+  id: number;
+  color: string;
+  numberOfDoors: number;
+}
+
+type Res<T> = {
+  data: {
+    [P in keyof T extends Car | User ? "cars" : "users"] : T[]
+  } & {pagination : number}
+  errors: string[];
+};
+
+
+const data: Res<User> = {
+  data: {
+    users : [
+      {id: 1, name: "Name", age: 234}
+    ],
+    pagination:2 
+  }, 
+  errors:['err1', 'err2']
+};
 
 // EX 5 ------------------------------
 // Write a class decorator, method decorator and parameter decorator functions for any Class the logic inside each decorator is up to you e.g.:
