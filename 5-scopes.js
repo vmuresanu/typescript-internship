@@ -25,3 +25,14 @@ var maxRows = 1000;
 if (100 < maxRows) {
     console.log("It is within range!");
 }
+
+var index = 0;
+
+if (index < 10) {
+    setTimeout(function () { 
+        return console.log("var idx = " + index); 
+    }, 0)
+    console.log("var index withOutSetTimeOut = " + index);
+}
+
+index++;

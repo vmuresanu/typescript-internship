@@ -19,7 +19,32 @@ interface Entity {
     name: boolean;
     age: boolean;
   }
- */
+*/
+
+type ModifiersWrite<Type> = {
+  -readonly [Property in keyof Type]: Type[Property];
+};
+
+type ModifiersOptional<Type> = {
+  [Property in keyof Type]-?: Type[Property];
+};
+
+type ModifiersAge<Type> = {
+  [Property in keyof Type as Exclude<Property, 'id'>]: Type[Property];
+};
+
+type ModifiersEthnicity<Type> = {
+  [Property in keyof Type as Exclude<Property, 'ethnicity'>]: Type[Property];
+};
+
+type ModifiersBoolean<Type> = {
+  [Property in keyof Type]: boolean;
+};
+
+type ModifiedEntity = ModifiersWrite<ModifiersOptional<ModifiersAge<ModifiersEthnicity<Entity>>>>
+
+type EntityBoolean = ModifiersBoolean<ModifiedEntity>
+
 
 // EX 2 ------------------------------------------------
 /*
@@ -32,11 +57,39 @@ interface Entity {
 * Else passed in type extends Anything Else, IdOrName - will be of type {age: boolean}
  */
 
+interface Id {
+  id: number
+}
+
+interface Name {
+  name: string
+}
+
+type IdOrName <T> = T extends number
+  ? Id
+  : T extends string
+  ? Name
+  : { age: boolean }
+
+const dataPro: IdOrName<number> = {
+  id: 4
+}
+
+const dataProX: IdOrName<string> = {
+  name: 'someName'
+}
+
+const dataProB: IdOrName<boolean> = {
+  age: true
+}
+
 // EX 3 ------------------------------------------------
 /*
  Write a detailed explanation with images || steps || words how ex 5 withLet function works and why did we get the expected result
  */
 
+const You_can_find_my_explonation_by_the_Link = 'https://www.figma.com/proto/pFQ1OneAed7McRU3ImTTys/Untitled?page-id=0%3A1&node-id=12%3A794&viewport=250%2C48%2C0.25&scaling=scale-down'
+ 
 // EX 4 ------------------------------------------------
 //Having two interfaces:
 /*interface User {
@@ -50,6 +103,7 @@ interface Car {
   color: string;
   numberOfDoors: number;
 }
+
 Replicate an API response that will have the following structure:
 {
   data: {
@@ -59,6 +113,36 @@ Replicate an API response that will have the following structure:
   errors: string[]
 }
 */
+
+interface User {
+  id: number;
+  name: string;
+  age: number;
+}
+
+interface Car {
+  id: number;
+  color: string;
+  numberOfDoors: 2 | 3;
+}
+
+type Res<Type> = {
+  data: {
+    [Property in keyof Type as 'content'] : Type[]
+  } & { pagination : number }
+  errors: string[];
+};
+
+const data: Res<User> = {
+  data: {
+    content: [
+      { id: 1, name: "Honda", age: 2 }, 
+      { id: 2, name: "BMW", age: 3 }
+    ],
+    pagination: 2
+  },
+  errors:['err1', 'err2']
+}
 
 // EX 5 ------------------------------
 // Write a class decorator, method decorator and parameter decorator functions for any Class the logic inside each decorator is up to you e.g.:
@@ -77,3 +161,43 @@ class SomeClass {
   }
 }
  */
+
+interface UserService {
+  users: number,
+  getUsersFromDataBase(): number
+}
+
+class UserService implements UserService {
+  users: number = 1000
+
+  @Catch()
+  getUsersFromDataBase():number {
+    throw new Error('Some problems')
+  }
+}
+
+function Catch(rethrow: boolean = false) {
+  return (
+    target: Object,
+    _: string | Symbol,
+    descriptor: TypedPropertyDescriptor<(...args: any[]) => any>
+  ): TypedPropertyDescriptor<(...args: any[]) => any> | void => {
+    const method = descriptor.value
+    descriptor.value = async (...args: any[]) => {
+      try {
+        const result = await method?.apply(target, args)
+        return result
+      } catch (error) {
+        if (error instanceof Error) {
+          console.log(error.message)
+          if (rethrow) {
+            throw error
+          }
+        }
+      }
+    }
+  }
+}
+
+console.log(new UserService().getUsersFromDataBase())
+
