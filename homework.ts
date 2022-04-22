@@ -65,17 +65,31 @@ interface Name {
   name: string
 }
 
-type IdOrName <T extends number | string> = T extends number
+type IdOrName <T> = T extends number
   ? Id
   : T extends string
   ? Name
   : { age: boolean }
+
+const dataPro: IdOrName<number> = {
+  id: 4
+}
+
+const dataProX: IdOrName<string> = {
+  name: 'someName'
+}
+
+const dataProB: IdOrName<boolean> = {
+  age: true
+}
 
 // EX 3 ------------------------------------------------
 /*
  Write a detailed explanation with images || steps || words how ex 5 withLet function works and why did we get the expected result
  */
 
+const You_can_find_my_explonation_by_the_Link = 'https://www.figma.com/proto/pFQ1OneAed7McRU3ImTTys/Untitled?page-id=0%3A1&node-id=12%3A794&viewport=250%2C48%2C0.25&scaling=scale-down'
+ 
 // EX 4 ------------------------------------------------
 //Having two interfaces:
 /*interface User {
@@ -114,16 +128,16 @@ interface Car {
 
 type Res<Type> = {
   data: {
-    [Property in keyof Type extends Car ? 'users' : 'cars'] : Type[]
+    [Property in keyof Type as 'content'] : Type[]
   } & { pagination : number }
   errors: string[];
 };
 
-const data: Res<Car> = {
+const data: Res<User> = {
   data: {
-    cars: [
-      { id: 1, color: "Honda", numberOfDoors: 2 }, 
-      { id: 2, color: "BMW", numberOfDoors: 3 }
+    content: [
+      { id: 1, name: "Honda", age: 2 }, 
+      { id: 2, name: "BMW", age: 3 }
     ],
     pagination: 2
   },
@@ -147,3 +161,43 @@ class SomeClass {
   }
 }
  */
+
+interface UserService {
+  users: number,
+  getUsersFromDataBase(): number
+}
+
+class UserService implements UserService {
+  users: number = 1000
+
+  @Catch()
+  getUsersFromDataBase():number {
+    throw new Error('Some problems')
+  }
+}
+
+function Catch(rethrow: boolean = false) {
+  return (
+    target: Object,
+    _: string | Symbol,
+    descriptor: TypedPropertyDescriptor<(...args: any[]) => any>
+  ): TypedPropertyDescriptor<(...args: any[]) => any> | void => {
+    const method = descriptor.value
+    descriptor.value = async (...args: any[]) => {
+      try {
+        const result = await method?.apply(target, args)
+        return result
+      } catch (error) {
+        if (error instanceof Error) {
+          console.log(error.message)
+          if (rethrow) {
+            throw error
+          }
+        }
+      }
+    }
+  }
+}
+
+console.log(new UserService().getUsersFromDataBase())
+
