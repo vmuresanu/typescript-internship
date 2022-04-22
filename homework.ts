@@ -128,14 +128,14 @@ interface Car {
 
 type Res<Type> = {
   data: {
-    [Property in keyof Type as 'content'] : Type[]
+    [Property in keyof Type  extends Car ? 'cars' : 'users' ] : Type[]
   } & { pagination : number }
   errors: string[];
 };
 
 const data: Res<User> = {
   data: {
-    content: [
+    users: [
       { id: 1, name: "Honda", age: 2 }, 
       { id: 2, name: "BMW", age: 3 }
     ],
