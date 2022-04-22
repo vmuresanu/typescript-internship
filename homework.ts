@@ -109,26 +109,26 @@ interface User {
 interface Car {
   id: number;
   color: string;
-  numberOfDoors: number;
+  numberOfDoors: 2 | 3;
 }
 
-type Res<T> = {
+type Res<Type> = {
   data: {
-    [P in keyof T extends Car | User ? "cars" : "users"] : T[]
-  } & {pagination : number}
+    [Property in keyof Type extends Car ? 'users' : 'cars'] : Type[]
+  } & { pagination : number }
   errors: string[];
 };
 
-
-const data: Res<User> = {
+const data: Res<Car> = {
   data: {
-    users : [
-      {id: 1, name: "Name", age: 234}
+    cars: [
+      { id: 1, color: "Honda", numberOfDoors: 2 }, 
+      { id: 2, color: "BMW", numberOfDoors: 3 }
     ],
-    pagination:2 
-  }, 
+    pagination: 2
+  },
   errors:['err1', 'err2']
-};
+}
 
 // EX 5 ------------------------------
 // Write a class decorator, method decorator and parameter decorator functions for any Class the logic inside each decorator is up to you e.g.:
